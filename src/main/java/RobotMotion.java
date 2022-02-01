@@ -1,8 +1,4 @@
-package coen448_project;
-
 import java.util.Scanner;
-
-import coen448_project.RobotPosition.Direction;
 
 /*
  * DEMO COMMANDS
@@ -18,8 +14,8 @@ import coen448_project.RobotPosition.Direction;
 public class RobotMotion {
 	
 	//global variable
-	static RoomArray roomArray = null;
-	static RobotPosition robotPosition = null;
+	public static RoomArray roomArray = null;
+	public static RobotPosition robotPosition = null;
 
 	public static void main(String[] args) {
 		loop();
@@ -30,14 +26,10 @@ public class RobotMotion {
 			try {
 				System.out.print("Enter command: "); // user input
 				Scanner input = new Scanner(System.in);
-				String command = input.nextLine(); 
-				String[] c = command.split("\\s+", 2);
-				c[0] = c[0].toUpperCase(); //command to upper case
+				String command = input.nextLine();
+				String[] c = getStrings(command);
 				//TODO: try catch block
-				int arg = -1;
-				if(c.length > 1) {
-					arg = Integer.parseInt(c[1]); //argument to integer
-				}
+				int arg = getArg(c);
 				Boolean success = true;
 				switch(c[0]) {
 				case "U":
@@ -91,7 +83,21 @@ public class RobotMotion {
 		}
 		//input.close()
 	}
-	
+
+	public static String[] getStrings(String command) {
+		String[] c = command.split("\\s+", 2);
+		c[0] = c[0].toUpperCase(); //command to upper case
+		return c;
+	}
+
+	public static int getArg(String[] c) {
+		int arg = -1;
+		if(c.length > 1) {
+			arg = Integer.parseInt(c[1]); //argument to integer
+		}
+		return arg;
+	}
+
 	public static boolean penUp() {
 		if(robotPosition != null) {
 			robotPosition.setPenDown(false);
@@ -101,7 +107,7 @@ public class RobotMotion {
 	}
 	
 	public static boolean penDown() {
-		if(robotPosition != null) {
+		if(robotPosition != null && roomArray != null) {
 			robotPosition.setPenDown(true);
 			roomArray.trace(robotPosition.getPos_x(), robotPosition.getPos_y());
 			return true;
@@ -127,7 +133,7 @@ public class RobotMotion {
 	
 	public static boolean moveForward(int s) {
 		if(robotPosition != null && roomArray != null) {
-			if(robotPosition.getDirection() == Direction.NORTH) {
+			if(robotPosition.getDirection() == RobotPosition.Direction.NORTH) {
 				for(int it = 0; it < s+1; it++) {
 					//add trace while moving
 					if(robotPosition.getPenDown()) {
@@ -141,7 +147,7 @@ public class RobotMotion {
 				}
 				//set new robot position
 				robotPosition.move(0,s);
-			} else if(robotPosition.getDirection() == Direction.EAST) {
+			} else if(robotPosition.getDirection() == RobotPosition.Direction.EAST) {
 				for(int it = 0; it < s+1; it++) {
 					//add trace while moving
 					if(robotPosition.getPenDown()) {
@@ -155,7 +161,7 @@ public class RobotMotion {
 				}
 				//set new robot position
 				robotPosition.move(s,0);
-			} else if(robotPosition.getDirection() == Direction.SOUTH) {
+			} else if(robotPosition.getDirection() == RobotPosition.Direction.SOUTH) {
 				for(int it = 0; it < s+1; it++) {
 					//add trace while moving
 					if(robotPosition.getPenDown()) {
@@ -169,7 +175,7 @@ public class RobotMotion {
 				}
 				//set new robot position
 				robotPosition.move(0,-s);
-			} else if(robotPosition.getDirection() == Direction.WEST) {
+			} else if(robotPosition.getDirection() == RobotPosition.Direction.WEST) {
 				for(int it = 0; it < s+1; it++) {
 					//add trace while moving
 					if(robotPosition.getPenDown()) {
