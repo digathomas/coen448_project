@@ -28,7 +28,6 @@ public class RobotMotion {
 				Scanner input = new Scanner(System.in);
 				String command = input.nextLine();
 				String[] c = getStrings(command);
-				//TODO: try catch block
 				int arg = getArg(c);
 				Boolean success = true;
 				switch(c[0]) {
@@ -81,7 +80,7 @@ public class RobotMotion {
 				
 			}
 		}
-		//input.close()
+		//input.close();
 	}
 
 	public static String[] getStrings(String command) {
@@ -132,7 +131,7 @@ public class RobotMotion {
 	}
 	
 	public static boolean moveForward(int s) {
-		if(robotPosition != null && roomArray != null) {
+		if(robotPosition != null && roomArray != null && s>0) {
 			if(robotPosition.getDirection() == RobotPosition.Direction.NORTH) {
 				for(int it = 0; it < s+1; it++) {
 					//add trace while moving
