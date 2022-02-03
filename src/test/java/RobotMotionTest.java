@@ -1,3 +1,4 @@
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -7,6 +8,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
@@ -16,10 +19,18 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class RobotMotionTest {
 
+    private final PrintStream standardOut = System.out;
+    private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     RobotMotion robotMotion;
     @BeforeEach
     public void setup(){
         robotMotion = new RobotMotion();
+        System.setOut(new PrintStream(outputStreamCaptor));
+    }
+
+    @AfterEach
+    public void tearDown() {
+        System.setOut(standardOut);
     }
 
     @DisplayName("Getting argument from strings test")
@@ -119,7 +130,7 @@ class RobotMotionTest {
         RobotMotion.turnRight();
         RobotMotion.penDown();
         RobotMotion.moveForward(1);
-        assertFalse(RobotMotion.roomArray.getRoomArray()[2][1]);
+        assertTrue(RobotMotion.roomArray.getRoomArray()[2][1]);
         assertTrue(RobotMotion.roomArray.getRoomArray()[2][0]);
         assertEquals(2,RobotMotion.robotPosition.getPos_x());
         assertEquals(0,RobotMotion.robotPosition.getPos_y());
@@ -140,15 +151,20 @@ class RobotMotionTest {
     @DisplayName("Print out array test")
     @Test
     void printArray() {
-        RobotMotion.roomArray = new RoomArray(9);
-        assertTrue(RobotMotion.printArray());
+        RobotMotion.roomArray = new RoomArray(1);
+        String expected = "0     \n    0";
+        RobotMotion.printArray();
+        assertEquals(expected, outputStreamCaptor.toString().trim());
     }
 
     @DisplayName("Print array with robot position test")
     @Test
     void printCurrent() {
-        RobotMotion.robotPosition = new RobotPosition();
-        assertTrue(RobotMotion.printCurrent());
+        RobotMotion.initializeSystem(1);
+        String expected = "Position: 0, 0\r\nPen: up\r\nFacing: north";
+        RobotMotion.printCurrent();
+        String actual = outputStreamCaptor.toString().trim();
+        assertEquals(expected, actual);
     }
 
     @DisplayName("Initializing robot system test")
@@ -171,5 +187,8 @@ class RobotMotionTest {
     @Test
     @Disabled("Not sure to test RobotMotion help")
     void help() {
+        String expected ="U - pen up\nD - pen down\nR - turn right\nL - turn left\nM s - move forward s spaces\nP - print array\nC - print current position\nQ - stop program\nI n - initilize system with n size array";
+        RobotMotion.help();
+        assertEquals(expected, outputStreamCaptor.toString().trim());
     }
 }
