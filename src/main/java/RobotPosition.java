@@ -1,5 +1,3 @@
-package coen448_project;
-
 public class RobotPosition {
 	
 	private int pos_x;

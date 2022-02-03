@@ -1,5 +1,3 @@
-package coen448_project;
-
 public class RoomArray {
 	
 	private boolean[][] roomArray;
@@ -44,6 +42,11 @@ public class RoomArray {
 	}
 	
 	//getters
+
+	public boolean[][] getRoomArray() {
+		return roomArray;
+	}
+
 	public int getSize() {
 		return this.size;
 	}
