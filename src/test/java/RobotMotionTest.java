@@ -185,10 +185,10 @@ class RobotMotionTest {
     }
 
     @Test
-    @Disabled("Not sure to test RobotMotion help")
     void help() {
-        String expected ="U - pen up\nD - pen down\nR - turn right\nL - turn left\nM s - move forward s spaces\nP - print array\nC - print current position\nQ - stop program\nI n - initilize system with n size array";
+        String expected ="U - pen up\r\nD - pen down\r\nR - turn right\r\nL - turn left\r\nM s - move forward s spaces\r\nP - print array\r\nC - print current position\r\nQ - stop program\r\nI n - initilize system with n size array";
         RobotMotion.help();
-        assertEquals(expected, outputStreamCaptor.toString().trim());
+        String actual = outputStreamCaptor.toString().trim();
+        assertEquals(expected, actual);
     }
 }
