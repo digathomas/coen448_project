@@ -155,7 +155,7 @@ class RobotMotionTest {
     @Test
     void initializeSystem() {
         assertFalse(RobotMotion.initializeSystem(0));
-        assertTrue(RobotMotion.initializeSystem(3));
+        assertTrue(RobotMotion.initializeSystem(4));
         assertNotNull(RobotMotion.robotPosition);
         assertNotNull(RobotMotion.roomArray);
 
