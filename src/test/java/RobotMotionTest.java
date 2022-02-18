@@ -1,6 +1,5 @@
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,6 +21,7 @@ class RobotMotionTest {
     private final PrintStream standardOut = System.out;
     private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
     RobotMotion robotMotion;
+
     @BeforeEach
     public void setup(){
         robotMotion = new RobotMotion();
@@ -34,36 +34,32 @@ class RobotMotionTest {
     }
 
     @DisplayName("Getting argument from strings test")
-    @ParameterizedTest()
-    @MethodSource("arrayOfStrings")
-    static void getArg(String[] c){
-        assertNotEquals(RobotMotion.getArg(c),-1);
-    }
-
-    static Stream<Arguments> arrayOfStrings() {
-        return Stream.of(
-                arguments(Arrays.asList("U")),
-                arguments(Arrays.asList("r")),
-                arguments(Arrays.asList("M", " ", "4"))
-        );
+    @Test
+    void getArg()
+    {
+        assertEquals(robotMotion.getArg(new String[]{"U"}),-1);
+        assertNotEquals(robotMotion.getArg(new String[]{"M", "4"}), -1);
     }
 
     @DisplayName("Retrieve array of strings from single string")
     @ParameterizedTest()
     @ValueSource(strings = {"U", "D", "r", "L", "M 4"})
-    static void getStrings(String command){
+    void getStrings(String command){
         char uppercase = Character.toUpperCase(command.charAt(0));
-        assertEquals(uppercase,RobotMotion.getStrings(command)[0].charAt(0));
+        assertEquals(uppercase,robotMotion.getStrings(command)[0].charAt(0));
     }
 
     @Test
-    static void robotPositionNull(){
+    void robotPositionNull(){
+        RobotMotion.robotPosition = null;
+        RobotMotion.roomArray = null;
         assertFalse(RobotMotion.penUp());
         assertFalse(RobotMotion.penDown());
         assertFalse(RobotMotion.turnRight());
         assertFalse(RobotMotion.turnLeft());
         assertFalse(RobotMotion.moveForward(0));
         assertFalse(RobotMotion.printCurrent());
+        assertFalse(RobotMotion.printArray());
     }
 
     @DisplayName("Pen up test")

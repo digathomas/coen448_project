@@ -18,10 +18,11 @@ public class RobotMotion {
 	public static RobotPosition robotPosition = null;
 
 	public static void main(String[] args) {
-		loop();
+		RobotMotion robotMotion = new RobotMotion();
+		robotMotion.loop();
 	}
 	
-	public static void loop() {
+	public void loop() {
 		while(true) {
 			try {
 				System.out.print("Enter command: "); // user input
@@ -83,13 +84,13 @@ public class RobotMotion {
 		//input.close();
 	}
 
-	public static String[] getStrings(String command) {
+	public String[] getStrings(String command) {
 		String[] c = command.split("\\s+", 2);
 		c[0] = c[0].toUpperCase(); //command to upper case
 		return c;
 	}
 
-	public static int getArg(String[] c) {
+	public int getArg(String[] c) {
 		int arg = -1;
 		if(c.length > 1) {
 			arg = Integer.parseInt(c[1]); //argument to integer
