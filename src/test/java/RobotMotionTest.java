@@ -49,8 +49,37 @@ class RobotMotionTest {
         assertEquals(uppercase,robotMotion.getStrings(command)[0].charAt(0));
     }
 
+    @DisplayName("Robot Position Null test")
     @Test
     void robotPositionNull(){
+        RobotMotion.robotPosition = null;
+        RobotMotion.roomArray = new RoomArray(3);
+        assertFalse(RobotMotion.penUp());
+        assertFalse(RobotMotion.penDown());
+        assertFalse(RobotMotion.turnRight());
+        assertFalse(RobotMotion.turnLeft());
+        assertFalse(RobotMotion.moveForward(0));
+        assertFalse(RobotMotion.printCurrent());
+        assertTrue(RobotMotion.printArray());
+    }
+
+    @DisplayName("Room Array Null test")
+    @Test
+    void roomArrayNull(){
+        RobotMotion.robotPosition = new RobotPosition();
+        RobotMotion.roomArray = null;
+        assertTrue(RobotMotion.penUp());
+        assertFalse(RobotMotion.penDown());
+        assertTrue(RobotMotion.turnRight());
+        assertTrue(RobotMotion.turnLeft());
+        assertFalse(RobotMotion.moveForward(0));
+        assertTrue(RobotMotion.printCurrent());
+        assertFalse(RobotMotion.printArray());
+    }
+
+    @DisplayName("Robot Position and Room Array Null test")
+    @Test
+    void robotPositionAndRoomArrayNull(){
         RobotMotion.robotPosition = null;
         RobotMotion.roomArray = null;
         assertFalse(RobotMotion.penUp());
