@@ -72,10 +72,10 @@ public class RobotMotion {
 					help();
 				}
 				if(!success) {
-					System.out.println("Error: command unsuccesfully executed");
+					System.out.println("Command unsuccesfully executed");
 				}
 			} catch(Exception e) {
-				System.out.println("Error: user input failed");
+				System.out.println("User input failed");
 				continue;
 			} finally {
 				
