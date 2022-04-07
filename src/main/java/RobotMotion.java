@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /*
@@ -16,6 +18,7 @@ public class RobotMotion {
 	//global variable
 	public static RoomArray roomArray = null;
 	public static RobotPosition robotPosition = null;
+	private static List<String> commandList = new ArrayList<>();
 
 	public static void main(String[] args) {
 		RobotMotion robotMotion = new RobotMotion();
@@ -65,32 +68,36 @@ public class RobotMotion {
 					success = stopProgram();
 					break;
 				case "I":
-					System.out.println("initilize system");
+					System.out.println("initialize system");
 					success = initializeSystem(arg);
+					break;
+				case "H":
+					System.out.println("replay commands");
+					success = replayCommandHistory();
 					break;
 				default:
 					help();
 				}
+				if (!c[0].equals("H")) {
+					commandList.add(command);
+				}
 				if(!success) {
-					System.out.println("Error: command unsuccesfully executed");
+					System.out.println("command unsuccessfully executed");
 				}
 			} catch(Exception e) {
-				System.out.println("Error: user input failed");
-				continue;
-			} finally {
-				
+				System.out.println("user input failed");
 			}
 		}
 		//input.close();
 	}
 
-	public String[] getStrings(String command) {
+	public static String[] getStrings(String command) {
 		String[] c = command.split("\\s+", 2);
 		c[0] = c[0].toUpperCase(); //command to upper case
 		return c;
 	}
 
-	public int getArg(String[] c) {
+	public static int getArg(String[] c) {
 		int arg = -1;
 		if(c.length > 1) {
 			arg = Integer.parseInt(c[1]); //argument to integer
@@ -224,6 +231,68 @@ public class RobotMotion {
 		}
 		return false;
 	}
+
+	public static boolean replayCommandHistory(){
+		for (int i = 0; i < commandList.size(); i++) {
+			try{
+			String command = commandList.get(i);
+			String[] c = getStrings(command);
+			int arg = getArg(c);
+			Boolean success = true;
+				switch(c[0]) {
+					case "U":
+						System.out.println("pen up");
+						success = penUp();
+						break;
+					case "D":
+						System.out.println("pen down");
+						success = penDown();
+						break;
+					case "R":
+						System.out.println("turn right");
+						success = turnRight();
+						break;
+					case "L":
+						System.out.println("turn left");
+						success = turnLeft();
+						break;
+					case "M":
+						System.out.println("move forward");
+						success = moveForward(arg);
+						break;
+					case "P":
+						System.out.println("print array");
+						success = printArray();
+						break;
+					case "C":
+						System.out.println("print current");
+						success = printCurrent();
+						break;
+					case "Q":
+						System.out.println("stop program");
+						success = stopProgram();
+						break;
+					case "I":
+						System.out.println("initialize system");
+						success = initializeSystem(arg);
+						break;
+					case "H":
+						System.out.println("replay commands");
+						System.out.println("unsuccessfully executed: infinite loop");
+						//success = replayCommandHistory();
+						break;
+					default:
+						//help();
+				}
+				if(!success) {
+					System.out.println("command unsuccessfully executed");
+				}
+			} catch(Exception e) {
+				System.out.println("user input failed");
+			}
+		}
+		return true;
+	}
 	
 	public static boolean help() {
 		System.out.println("U - pen up");
@@ -234,7 +303,8 @@ public class RobotMotion {
 		System.out.println("P - print array");
 		System.out.println("C - print current position");
 		System.out.println("Q - stop program");
-		System.out.println("I n - initilize system with n size array");
+		System.out.println("I n - initialize system with n size array");
+		System.out.println("H - replay all the commands executed");
 		return true;
 	}
 
