@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
@@ -209,9 +210,29 @@ class RobotMotionTest {
         }
     }
 
+    @DisplayName("Replaying commands")
+    @Test
+    void replayCommandList() {
+        assertTrue(RobotMotion.replayCommandList()); //empty list
+
+        assertTrue(RobotMotion.initializeSystem(4));
+        assertTrue(RobotMotion.penDown());
+        assertTrue(RobotMotion.moveForward(3));
+        assertTrue(RobotMotion.turnRight());
+        assertTrue(RobotMotion.moveForward(2));
+        assertEquals(2,RobotMotion.robotPosition.getPos_x());
+        assertEquals(3,RobotMotion.robotPosition.getPos_y());
+
+        assertTrue(RobotMotion.replayCommandList()); //position comes back to same
+        assertEquals(2,RobotMotion.robotPosition.getPos_x());
+        assertEquals(3,RobotMotion.robotPosition.getPos_y());
+
+        assertTrue(RobotMotion.replayCommandList()); //no infinite loop
+    }
+
     @Test
     void help() {
-        String expected ="U - pen up\r\nD - pen down\r\nR - turn right\r\nL - turn left\r\nM s - move forward s spaces\r\nP - print array\r\nC - print current position\r\nQ - stop program\r\nI n - initilize system with n size array";
+        String expected ="U - pen up\r\nD - pen down\r\nR - turn right\r\nL - turn left\r\nM s - move forward s spaces\r\nP - print array\r\nC - print current position\r\nQ - stop program\r\nI n - initialize system with n size array\r\nH - replay all the commands executed";
         RobotMotion.help();
         String actual = outputStreamCaptor.toString().trim();
         assertEquals(expected, actual);

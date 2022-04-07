@@ -73,7 +73,7 @@ public class RobotMotion {
 					break;
 				case "H":
 					System.out.println("replay commands");
-					success = replayCommandHistory();
+					success = replayCommandList();
 					break;
 				default:
 					help();
@@ -232,7 +232,7 @@ public class RobotMotion {
 		return false;
 	}
 
-	public static boolean replayCommandHistory(){
+	public static boolean replayCommandList(){
 		for (int i = 0; i < commandList.size(); i++) {
 			try{
 			String command = commandList.get(i);
