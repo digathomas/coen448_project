@@ -30,29 +30,34 @@ public class RobotMotion {
 			try {
 				System.out.print("Enter command: "); // user input
 				Scanner input = new Scanner(System.in);
-				String command = input.nextLine();
+				String command = input.nextLine().trim();
 				String[] c = getStrings(command);
 				int arg = getArg(c);
-				Boolean success = true;
+				Boolean success = false;
 				switch(c[0]) {
 				case "U":
-					System.out.println("pen up");
+					System.out.println("Pen up");
 					success = penUp();
 					break;
 				case "D":
-					System.out.println("pen down");
+					System.out.println("Pen down");
 					success = penDown();
 					break;
 				case "R":
-					System.out.println("turn right");
+					System.out.println("Turn right");
 					success = turnRight();
 					break;
 				case "L":
-					System.out.println("turn left");
+					System.out.println("Turn left");
 					success = turnLeft();
 					break;
 				case "M":
-					System.out.println("move forward");
+					System.out.println("Move forward");
+					if (c.length < 2) {
+						System.out.println("Invalid move command: missing spaces (s) argument." +
+											" Correct format: [M s|m s]");
+						break;
+					}
 					success = moveForward(arg);
 					break;
 				case "P":
@@ -60,35 +65,45 @@ public class RobotMotion {
 					success = printArray();
 					break;
 				case "C":
-					System.out.println("print current");
+					System.out.println("Print current");
 					success = printCurrent();
 					break;
 				case "Q":
-					System.out.println("stop program");
+					System.out.println("Stop program");
 					success = stopProgram();
 					break;
 				case "I":
-					System.out.println("initialize system");
+					System.out.println("Initialize system");
+					if (c.length < 2) {
+						System.out.println("Invalid initialize command: missing size of array (n) argument." +
+											" Correct format: [I n|i n]");
+						break;
+					}
 					success = initializeSystem(arg);
 					break;
 				case "H":
-					System.out.println("replay commands");
+					System.out.println("Replay commands");
 					success = replayCommandList();
 					break;
 				default:
+					if (command.isEmpty()) {
+						System.out.println("Invalid input: empty command");
+					}
+					else {
+						System.out.println("Unknown command.");
+					}
 					help();
 				}
 				if (!c[0].equals("H")) {
 					commandList.add(command);
 				}
 				if(!success) {
-					System.out.println("command unsuccessfully executed");
+					System.out.println("Command unsuccessfully executed");
 				}
 			} catch(Exception e) {
 				System.out.println("user input failed");
 			}
 		}
-		//input.close();
 	}
 
 	public static String[] getStrings(String command) {
@@ -110,6 +125,7 @@ public class RobotMotion {
 			robotPosition.setPenDown(false);
 			return true;
 		}
+		System.out.println("System not initialized.");
 		return false;
 	}
 	
@@ -119,6 +135,7 @@ public class RobotMotion {
 			roomArray.trace(robotPosition.getPos_x(), robotPosition.getPos_y());
 			return true;
 		}
+		System.out.println("System not initialized.");
 		return false;
 	}
 	
@@ -127,6 +144,7 @@ public class RobotMotion {
 			robotPosition.turnRight();
 			return true;
 		}
+		System.out.println("System not initialized.");
 		return false;
 	}
 	
@@ -135,11 +153,15 @@ public class RobotMotion {
 			robotPosition.turnLeft();
 			return true;
 		}
+		System.out.println("System not initialized.");
 		return false;
 	}
 	
 	public static boolean moveForward(int s) {
-		if(robotPosition != null && roomArray != null && s>0) {
+		if (s < 0) {
+			System.out.println("Invalid move command: number of spaces (s) must be positive.");
+		}
+		else if (robotPosition != null && roomArray != null) {
 			if(robotPosition.getDirection() == RobotPosition.Direction.NORTH) {
 				for(int it = 0; it < s+1; it++) {
 					//add trace while moving
@@ -149,6 +171,7 @@ public class RobotMotion {
 					//reached array limit
 					if(robotPosition.getPos_y()+it == roomArray.getSize()-1) {
 						s = it;
+						System.out.println("Reached floor array bounds. Move executed for " + s + " steps.");
 						break;
 					}
 				}
@@ -163,6 +186,7 @@ public class RobotMotion {
 					//reached array limit
 					if(robotPosition.getPos_x()+it == roomArray.getSize()-1) {
 						s = it;
+						System.out.println("Reached floor array bounds. Move executed for " + s + " steps.");
 						break;
 					}
 				}
@@ -177,6 +201,7 @@ public class RobotMotion {
 					//reached array limit
 					if(robotPosition.getPos_y()-it == 0) {
 						s = it;
+						System.out.println("Reached floor array bounds. Move executed for " + s + " steps.");
 						break;
 					}
 				}
@@ -191,6 +216,7 @@ public class RobotMotion {
 					//reached array limit
 					if(robotPosition.getPos_x()-it == 0) {
 						s = it;
+						System.out.println("Reached floor array bounds. Move executed for " + s + " steps.");
 						break;
 					}
 				}
@@ -198,6 +224,9 @@ public class RobotMotion {
 				robotPosition.move(-s,0);
 			}
 			return true;
+		}
+		else {
+			System.out.println("System not initialized.");
 		}
 		return false;
 	}
@@ -207,6 +236,7 @@ public class RobotMotion {
 			roomArray.print();
 			return true;
 		}
+		System.out.println("System not initialized.");
 		return false;
 	}
 	
@@ -215,6 +245,7 @@ public class RobotMotion {
 			robotPosition.print();
 			return true;
 		}
+		System.out.println("System not initialized.");
 		return false;
 	}
 	
@@ -229,10 +260,14 @@ public class RobotMotion {
 			robotPosition = new RobotPosition();
 			return true;
 		}
+		else {
+			System.out.println("Invalid initialize command: size of array (n) must be greater than zero.");
+		}
 		return false;
 	}
 
 	public static boolean replayCommandList(){
+		System.out.println();
 		for (int i = 0; i < commandList.size(); i++) {
 			try{
 			String command = commandList.get(i);
@@ -293,8 +328,9 @@ public class RobotMotion {
 		}
 		return true;
 	}
-	
+
 	public static boolean help() {
+		System.out.println("Valid commands:");
 		System.out.println("U - pen up");
 		System.out.println("D - pen down");
 		System.out.println("R - turn right");

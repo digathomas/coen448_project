@@ -174,6 +174,27 @@ class RobotMotionTest {
 
     }
 
+    @DisplayName("Move forward command with negative number of steps  test")
+    @Test
+    void moveForwardNegativeStepsTest() {
+        RobotMotion.robotPosition = new RobotPosition();
+        RobotMotion.roomArray = new RoomArray(9);
+        String expected = "Invalid move command: number of spaces (s) must be positive.";
+        RobotMotion.moveForward(-3);
+        assertEquals(expected, outputStreamCaptor.toString().trim());
+    }
+
+    @DisplayName("Initialize system to size less than one test")
+    @Test
+    void initializeSystemSizeLessThanOneTest() {
+        RobotMotion.initializeSystem(0);
+        String expected = "Invalid initialize command: size of array (n) must be greater than zero.";
+        assertEquals(expected, outputStreamCaptor.toString().trim());
+        outputStreamCaptor.reset();
+        RobotMotion.initializeSystem(-3);
+        assertEquals(expected, outputStreamCaptor.toString().trim());
+    }
+
     @DisplayName("Print out array test")
     @Test
     void printArray() {
@@ -232,9 +253,81 @@ class RobotMotionTest {
 
     @Test
     void help() {
-        String expected ="U - pen up\r\nD - pen down\r\nR - turn right\r\nL - turn left\r\nM s - move forward s spaces\r\nP - print array\r\nC - print current position\r\nQ - stop program\r\nI n - initialize system with n size array\r\nH - replay all the commands executed";
+        String expected ="Valid commands:\r\nU - pen up\r\nD - pen down\r\nR - turn right\r\nL - turn left\r\n" +
+                "M s - move forward s spaces\r\nP - print array\r\nC - print current position\r\nQ - stop program\r\n" +
+                "I n - initialize system with n size array\r\nH - replay all the commands executed";
         RobotMotion.help();
         String actual = outputStreamCaptor.toString().trim();
         assertEquals(expected, actual);
+    }
+
+    @DisplayName("Pen up command - system uninitialized")
+    @Test
+    void penUpSystemUninitializedOutputMessageTest() {
+        RobotMotion.robotPosition = null;
+        RobotMotion.roomArray = null;
+        String expected = "System not initialized.";
+        RobotMotion.penUp();
+        assertEquals(expected, outputStreamCaptor.toString().trim());
+    }
+
+    @DisplayName("Pen down command - system uninitialized output message test")
+    @Test
+    void penDownSystemUninitializedOutputMessageTest() {
+        RobotMotion.robotPosition = null;
+        RobotMotion.roomArray = null;
+        String expected = "System not initialized.";
+        RobotMotion.penDown();
+        assertEquals(expected, outputStreamCaptor.toString().trim());
+    }
+
+    @DisplayName("Turn right command - system uninitialized output message test")
+    @Test
+    void turnRightSystemUninitializedOutputMessageTest() {
+        RobotMotion.robotPosition = null;
+        RobotMotion.roomArray = null;
+        String expected = "System not initialized.";
+        RobotMotion.turnRight();
+        assertEquals(expected, outputStreamCaptor.toString().trim());
+    }
+
+    @DisplayName("Turn left command - system uninitialized output message test")
+    @Test
+    void turnLeftSystemUninitializedOutputMessageTest() {
+        RobotMotion.robotPosition = null;
+        RobotMotion.roomArray = null;
+        String expected = "System not initialized.";
+        RobotMotion.turnLeft();
+        assertEquals(expected, outputStreamCaptor.toString().trim());
+    }
+
+    @DisplayName("Move forward command - system uninitialized output message test")
+    @Test
+    void moveForwardSystemUninitializedOutputMessageTest() {
+        RobotMotion.robotPosition = null;
+        RobotMotion.roomArray = null;
+        String expected = "System not initialized.";
+        RobotMotion.moveForward(0);
+        assertEquals(expected, outputStreamCaptor.toString().trim());
+    }
+
+    @DisplayName("Print current command - system uninitialized output message test")
+    @Test
+    void printCurrentSystemUninitializedOutputMessageTest() {
+        RobotMotion.robotPosition = null;
+        RobotMotion.roomArray = null;
+        String expected = "System not initialized.";
+        RobotMotion.printCurrent();
+        assertEquals(expected, outputStreamCaptor.toString().trim());
+    }
+
+    @DisplayName("Print array command - system uninitialized output message test")
+    @Test
+    void printArraySystemUninitializedOutputMessageTest() {
+        RobotMotion.robotPosition = null;
+        RobotMotion.roomArray = null;
+        String expected = "System not initialized.";
+        RobotMotion.printArray();
+        assertEquals(expected, outputStreamCaptor.toString().trim());
     }
 }
